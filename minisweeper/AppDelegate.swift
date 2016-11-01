@@ -9,19 +9,30 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     @IBOutlet weak var window: NSWindow!
-
-
-    func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+    @IBOutlet weak var gameController: GameViewController!
+    var windowedFrame: NSRect?
+    
+    // MARK: - NSWindowDelegate
+    
+    func windowWillUseStandardFrame(_ window: NSWindow, defaultFrame newFrame: NSRect) -> NSRect {
+        var size = gameController.gameViewSize
+        size.height += window.frame.size.height - window.contentView!.frame.size.height
+        return NSRect(origin: window.frame.origin, size: size)
     }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+    
+    func windowShouldZoom(_ window: NSWindow, toFrame newFrame: NSRect) -> Bool {
+        return window.frame.size != gameController.gameViewSize
     }
-
-
+    
+    func windowWillEnterFullScreen(_ notification: Notification) {
+        windowedFrame = window.frame
+    }
+    
+    func windowWillExitFullScreen(_ notification: Notification) {
+        window.setFrame(windowedFrame!, display: false)
+    }
+    
 }
-
