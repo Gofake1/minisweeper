@@ -28,6 +28,14 @@ class Game {
             }
         }
     }
+    var safeStartingTile: (Int, Int) {
+        var x, y: Int
+        repeat {
+            x = Int(arc4random_uniform(UInt32(width)))
+            y = Int(arc4random_uniform(UInt32(height)))
+        } while (grid[x][y].type != .safe || grid[x][y].numAdjacentMines != 0)
+        return (x, y)
+    }
     var state: GameState = .inProgress
     
     /// - parameter numMines: must be less than width times height
@@ -46,12 +54,13 @@ class Game {
     }
     
     func flag(x: Int, y: Int) {
-        switch grid[x][y].state {
+        guard let col = grid[safe: x], let tile = col[safe: y] else {return}
+        switch tile.state {
         case .hidden:
-            grid[x][y].state = .flagged
+            tile.state = .flagged
             numFlags += 1
         case .flagged:
-            grid[x][y].state = .hidden
+            tile.state = .hidden
             numFlags -= 1
         case .cleared:  fallthrough
         case .revealed: fallthrough
@@ -61,11 +70,13 @@ class Game {
     }
     
     func sweep(x: Int, y: Int) {
-        switch grid[x][y].type {
+        guard let col = grid[safe: x], let tile = col[safe: y] else {return}
+        if (tile.state == .flagged) {return}
+        switch tile.type {
         case .safe:
-            grid[x][y].expand()
+            tile.expand()
         case .mined:
-            grid[x][y].state = .exploded
+            tile.state = .exploded
             state = .lost
         }
     }
@@ -81,14 +92,14 @@ class Game {
     }
     
     private func tileSequence() -> [Tile.TileType] {
-        var sequence = Array(repeating: Tile.TileType.safe, count: self.width * self.height)
+        var sequence = Array(repeating: Tile.TileType.safe, count: width * height)
         if numMines < 1 {
             return sequence
         }
-        for _ in 0..<self.numMines {
+        for _ in 0..<numMines {
             var pos: Int
             repeat {
-                pos = Int(arc4random_uniform(UInt32(self.width * self.height)))
+                pos = Int(arc4random_uniform(UInt32(width * height)))
             } while sequence[pos] == .mined
             sequence[pos] = .mined
         }

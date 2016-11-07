@@ -79,6 +79,11 @@
                                     <action selector="startNewGame:" target="yof-dO-fCn" id="gMT-PY-OdH"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Options..." keyEquivalent="o" id="6BA-3L-1Vq">
+                                <connections>
+                                    <action selector="showOptionsWindow:" target="Voe-Tx-rLC" id="OK5-46-aUQ"/>
+                                </connections>
+                            </menuItem>
                         </items>
                     </menu>
                 </menuItem>
@@ -154,7 +159,7 @@
             </items>
             <point key="canvasLocation" x="139" y="-490"/>
         </menu>
-        <window title="minisweeper" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
+        <window title="minisweeper" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" showsToolbarButton="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" topStrut="YES"/>
             <rect key="contentRect" x="60" y="840" width="400" height="300"/>

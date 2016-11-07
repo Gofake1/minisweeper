@@ -12,6 +12,8 @@
 		4A8D98EA1DC40AF7008D7ABE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A8D98E81DC40AF7008D7ABE /* MainMenu.xib */; };
 		4A8D98F21DC40C7B008D7ABE /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D98F11DC40C7B008D7ABE /* Game.swift */; };
 		4A8D98F61DC449C6008D7ABE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D98F51DC449C6008D7ABE /* GameViewController.swift */; };
+		4AE429A01DC9D0F8003D15B2 /* OptionsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4299E1DC9D0F8003D15B2 /* OptionsWindowController.swift */; };
+		4AE429A11DC9D0F8003D15B2 /* OptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4299F1DC9D0F8003D15B2 /* OptionsWindowController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +24,8 @@
 		4A8D98EB1DC40AF7008D7ABE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A8D98F11DC40C7B008D7ABE /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Game.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4A8D98F51DC449C6008D7ABE /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		4AE4299E1DC9D0F8003D15B2 /* OptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsWindowController.swift; sourceTree = "<group>"; };
+		4AE4299F1DC9D0F8003D15B2 /* OptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptionsWindowController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +61,8 @@
 				4A8D98E41DC40AF7008D7ABE /* AppDelegate.swift */,
 				4A8D98E81DC40AF7008D7ABE /* MainMenu.xib */,
 				4A8D98F51DC449C6008D7ABE /* GameViewController.swift */,
+				4AE4299E1DC9D0F8003D15B2 /* OptionsWindowController.swift */,
+				4AE4299F1DC9D0F8003D15B2 /* OptionsWindowController.xib */,
 				4A8D98F11DC40C7B008D7ABE /* Game.swift */,
 				4A8D98E61DC40AF7008D7ABE /* Assets.xcassets */,
 				4A8D98EB1DC40AF7008D7ABE /* Info.plist */,
@@ -125,6 +131,7 @@
 			files = (
 				4A8D98E71DC40AF7008D7ABE /* Assets.xcassets in Resources */,
 				4A8D98EA1DC40AF7008D7ABE /* MainMenu.xib in Resources */,
+				4AE429A11DC9D0F8003D15B2 /* OptionsWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,6 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AE429A01DC9D0F8003D15B2 /* OptionsWindowController.swift in Sources */,
 				4A8D98F61DC449C6008D7ABE /* GameViewController.swift in Sources */,
 				4A8D98E51DC40AF7008D7ABE /* AppDelegate.swift in Sources */,
 				4A8D98F21DC40C7B008D7ABE /* Game.swift in Sources */,
@@ -290,6 +298,7 @@
 				4A8D98F01DC40AF7008D7ABE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

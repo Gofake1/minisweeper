@@ -13,7 +13,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var gameController: GameViewController!
+    var optionsWindowController: OptionsWindowController!
     var windowedFrame: NSRect?
+    
+    @IBAction func showOptionsWindow(_ sender: NSMenuItem) {
+        optionsWindowController.showWindow(nil)
+    }
+    
+    // MARK: - NSApplicationDelegate
+    
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        optionsWindowController = OptionsWindowController()
+    }
+    
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true
+    }
     
     // MARK: - NSWindowDelegate
     

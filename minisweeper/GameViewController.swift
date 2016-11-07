@@ -12,20 +12,43 @@ class GameViewController: NSViewController {
     
     private var game: Game?
     private var gameViewLayer = CALayer()
-    private var tileLayers: [CAShapeLayer]?
-    private var textLayers: [CATextLayer]?
+    //private var tileLayers: [[CAShapeLayer]]?
+    //private var textLayers: [[CATextLayer]]?
     var gameViewSize: NSSize {
         return NSSize(width: game!.width*20, height: game!.height*20)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        UserDefaults.standard.register(defaults: [
+            "difficulty":  "Medium",
+            "numCols":     30,
+            "numRows":     20,
+            "numMines":    60,
+            "colorScheme": "Sierra"
+        ])
         newGame()
         view.layer?.addSublayer(gameViewLayer)
     }
     
     private func newGame() {
-        game = Game(width: 30, height: 20, numMines: 60)
+        let gameHeight, gameWidth, gameMineCount: Int
+        guard let difficulty = Preset(rawValue: UserDefaults.standard.string(forKey: "difficulty")!) else {return}
+        switch difficulty {
+        case .Easy:   fallthrough
+        case .Medium: fallthrough
+        case .Hard:
+            guard let preset = OptionsWindowController.presets[difficulty] else {return}
+            gameHeight    = preset.gridSize.rows
+            gameWidth     = preset.gridSize.cols
+            gameMineCount = preset.numMines
+        case .Custom:
+            gameHeight    = UserDefaults.standard.integer(forKey: "numRows")
+            gameWidth     = UserDefaults.standard.integer(forKey: "numCols")
+            gameMineCount = UserDefaults.standard.integer(forKey: "numMines")
+        }
+        if gameMineCount > gameHeight * gameWidth {return}
+        game = Game(width: gameWidth, height: gameHeight, numMines: gameMineCount)
         view.window?.title = "\(game!.numMines) mines"
         view.window?.performZoom(nil)
         drawGame()
@@ -42,6 +65,7 @@ class GameViewController: NSViewController {
                 tileLayer.lineWidth = 0.5
                 
                 let textLayer = CATextLayer()
+                textLayer.alignmentMode = kCAAlignmentCenter
                 textLayer.fontSize = 12.0
                 textLayer.frame = NSRect(x: i*20, y: j*20, width: 20, height: 20)
                 
@@ -49,7 +73,7 @@ class GameViewController: NSViewController {
                 
                 switch tile.state {
                 case .hidden:
-                    tileLayer.fillColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+                    tileLayer.fillColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
                 case .cleared:
                     tileLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
                     if tile.numAdjacentMines != 0 {
@@ -111,7 +135,10 @@ class GameViewController: NSViewController {
     }
     
     override func mouseDown(with event: NSEvent) {
-        guard let game = game, game.state == .inProgress else {return}
+        guard let game = game, game.state == .inProgress else {
+            newGame()
+            return
+        }
         game.sweep(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
         drawGame()
         if game.state != .inProgress {
@@ -120,13 +147,15 @@ class GameViewController: NSViewController {
     }
     
     override func rightMouseDown(with event: NSEvent) {
-        guard let game = game, game.state == .inProgress else {return}
+        guard let game = game, game.state == .inProgress else {
+            newGame()
+            return
+        }
         game.flag(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
         drawGame()
     }
     
     @IBAction func startNewGame(_ sender: NSMenuItem) {
-        // TODO: spawn new window if none
         newGame()
     }
     
