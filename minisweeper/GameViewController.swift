@@ -12,21 +12,12 @@ class GameViewController: NSViewController {
     
     private var game: Game?
     private var gameViewLayer = CALayer()
-    //private var tileLayers: [[CAShapeLayer]]?
-    //private var textLayers: [[CATextLayer]]?
     var gameViewSize: NSSize {
         return NSSize(width: game!.width*20, height: game!.height*20)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        UserDefaults.standard.register(defaults: [
-            "difficulty":  "Medium",
-            "numCols":     30,
-            "numRows":     20,
-            "numMines":    60,
-            "colorScheme": "Sierra"
-        ])
         newGame()
         view.layer?.addSublayer(gameViewLayer)
     }
@@ -35,14 +26,12 @@ class GameViewController: NSViewController {
         let gameHeight, gameWidth, gameMineCount: Int
         guard let difficulty = Preset(rawValue: UserDefaults.standard.string(forKey: "difficulty")!) else {return}
         switch difficulty {
-        case .Easy:   fallthrough
-        case .Medium: fallthrough
-        case .Hard:
+        case .easy, .medium, .hard:
             guard let preset = OptionsWindowController.presets[difficulty] else {return}
             gameHeight    = preset.gridSize.rows
             gameWidth     = preset.gridSize.cols
             gameMineCount = preset.numMines
-        case .Custom:
+        case .custom:
             gameHeight    = UserDefaults.standard.integer(forKey: "numRows")
             gameWidth     = UserDefaults.standard.integer(forKey: "numCols")
             gameMineCount = UserDefaults.standard.integer(forKey: "numMines")

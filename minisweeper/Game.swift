@@ -16,7 +16,7 @@ class Game {
         case lost
     }
     
-    private(set) var grid: [[Tile]] = []
+    private(set) var grid:     [[Tile]] = []
     private(set) var height:   Int
     private(set) var width:    Int
     private(set) var numFlags: Int = 0
@@ -43,11 +43,11 @@ class Game {
         self.width    = width
         self.height   = height
         self.numMines = numMines
-        var tileTypes = tileSequence()
+        var types = tileSequence()
         for i in 0..<width {
             var col: [Tile] = []
             for j in 0..<height {
-                col.append(Tile(x: i, y: j, type: tileTypes.popLast()!, game: self))
+                col.append(Tile(x: i, y: j, type: types.popLast()!, game: self))
             }
             grid.append(col)
         }
@@ -84,7 +84,7 @@ class Game {
     func revealMines() {
         for col in grid {
             for tile in col {
-                if tile.type == .mined && tile.state == .hidden {
+                if tile.type == .mined {
                     tile.state = .revealed
                 }
             }
@@ -157,8 +157,8 @@ class Tile {
     var game: Game
     private var _neighbors: [Tile?]?
     var neighbors: [Tile?] {
-        if let _neighbors = _neighbors {
-            return _neighbors
+        if _neighbors != nil {
+            return _neighbors!
         }
         var a, b, c, d, f, g, h, i: Tile?
         if let col = game.grid[safe: x-1] {
@@ -178,18 +178,17 @@ class Tile {
     }
     private var _numAdjacentMines: Int?
     var numAdjacentMines: Int {
-        if let _numAdjacentMines = _numAdjacentMines {
-            return _numAdjacentMines
-        }
-        var count = 0
-        for neighbor in neighbors {
-            if let neighbor = neighbor {
-                if neighbor.type == .mined {
-                    count += 1
+        if _numAdjacentMines == nil {
+            var count = 0
+            for neighbor in neighbors {
+                if let neighbor = neighbor {
+                    if neighbor.type == .mined {
+                        count += 1
+                    }
                 }
             }
+            _numAdjacentMines = count
         }
-        _numAdjacentMines = count
         return _numAdjacentMines!
     }
     var state: TileState = .hidden
@@ -221,11 +220,9 @@ class Tile {
 }
 
 extension Collection {
-    
     // http://stackoverflow.com/questions/25329186/safe-bounds-checked-array-lookup-in-swift-through-optional-bindings
-    /// Return nil if out of bounds
+    /// - returns: nil if out of bounds
     subscript(safe index: Index) -> Iterator.Element? {
         return index >= startIndex && index < endIndex ? self[index] : nil
     }
-    
 }

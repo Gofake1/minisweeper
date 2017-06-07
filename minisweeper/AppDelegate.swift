@@ -23,6 +23,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     // MARK: - NSApplicationDelegate
     
     func applicationDidFinishLaunching(_ notification: Notification) {
+        UserDefaults.standard.register(defaults: [
+            "difficulty":  "Medium",
+            "numCols":     30,
+            "numRows":     20,
+            "numMines":    60,
+            "colorScheme": "Sierra"
+            ])
         optionsWindowController = OptionsWindowController()
     }
     

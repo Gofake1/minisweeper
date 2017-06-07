@@ -9,10 +9,10 @@
 import Cocoa
 
 enum Preset: String {
-    case Easy
-    case Medium
-    case Hard
-    case Custom
+    case easy   = "Easy"
+    case medium = "Medium"
+    case hard   = "Hard"
+    case custom = "Custom"
 }
 
 typealias Options = (gridSize: (cols: Int, rows: Int), numMines: Int)
@@ -24,26 +24,26 @@ class OptionsWindowController: NSWindowController, NSControlTextEditingDelegate 
     @IBOutlet weak var numColsField: NSTextField!
     @IBOutlet weak var numMinesField: NSTextField!
     
-    override var windowNibName: String? {
-        return "OptionsWindowController"
+    override var windowNibName: NSNib.Name? {
+        return NSNib.Name(rawValue: "OptionsWindowController")
     }
     
     static let presets = [
-        Preset.Easy:   (gridSize: (cols: 10, rows: 10), numMines: 10),
-        Preset.Medium: (gridSize: (cols: 30, rows: 20), numMines: 60),
-        Preset.Hard:   (gridSize: (cols: 30, rows: 30), numMines: 100)
+        Preset.easy:   (gridSize: (cols: 10, rows: 10), numMines: 10),
+        Preset.medium: (gridSize: (cols: 30, rows: 20), numMines: 60),
+        Preset.hard:   (gridSize: (cols: 30, rows: 30), numMines: 100)
     ]
     
     override func windowDidLoad() {
         guard let difficulty = UserDefaults.standard.string(forKey: "difficulty") else {return}
         switch Preset(rawValue: difficulty)! {
-        case .Easy:
+        case .easy:
             difficultyControl.selectedSegment = 0
-        case .Medium:
+        case .medium:
             difficultyControl.selectedSegment = 1
-        case .Hard:
+        case .hard:
             difficultyControl.selectedSegment = 2
-        case .Custom:
+        case .custom:
             difficultyControl.selectedSegment = 3
         }
         updateViews()
@@ -63,11 +63,11 @@ class OptionsWindowController: NSWindowController, NSControlTextEditingDelegate 
         var options: Options
         switch difficultyControl.selectedSegment {
         case 0:
-            options = OptionsWindowController.presets[.Easy]!
+            options = OptionsWindowController.presets[.easy]!
         case 1:
-            options = OptionsWindowController.presets[.Medium]!
+            options = OptionsWindowController.presets[.medium]!
         case 2:
-            options = OptionsWindowController.presets[.Hard]!
+            options = OptionsWindowController.presets[.hard]!
         case 3:
             let numCols  = UserDefaults.standard.integer(forKey: "numCols")
             let numRows  = UserDefaults.standard.integer(forKey: "numRows")
