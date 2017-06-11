@@ -8,19 +8,21 @@
 
 import Foundation
 
+protocol GameDelegate: class {
+    func gameDidUpdate(_ dirtyTiles: [Tile])
+}
+
 class Game {
     
-    enum GameState {
+    enum State {
         case inProgress
         case won
         case lost
     }
-    
-    private(set) var grid:     [[Tile]] = []
-    private(set) var height:   Int
-    private(set) var width:    Int
-    private(set) var numFlags: Int = 0
-    private(set) var numMines: Int
+
+    var allTiles: [Tile] {
+        return grid.flatMap { $0 }
+    }
     var numSafeTilesCleared: Int = 0 {
         didSet {
             if numSafeTilesCleared - (height * width - numMines) == 0 {
@@ -28,33 +30,42 @@ class Game {
             }
         }
     }
+    // Unused
     var safeStartingTile: (Int, Int) {
         var x, y: Int
         repeat {
             x = Int(arc4random_uniform(UInt32(width)))
             y = Int(arc4random_uniform(UInt32(height)))
-        } while (grid[x][y].type != .safe || grid[x][y].numAdjacentMines != 0)
+        } while (grid[x][y].kind != .safe || grid[x][y].numAdjacentMines != 0)
         return (x, y)
     }
-    var state: GameState = .inProgress
+
+    private(set) var grid:     [[Tile]] = []
+    private(set) var height:   Int
+    private(set) var width:    Int
+    private(set) var numFlags = 0
+    private(set) var numMines: Int
+    private(set) var state = State.inProgress
+    private unowned var delegate: GameDelegate
     
     /// - parameter numMines: must be less than width times height
-    init(width: Int, height: Int, numMines: Int) {
+    init(width: Int, height: Int, numMines: Int, delegate: GameDelegate) {
         self.width    = width
         self.height   = height
         self.numMines = numMines
-        var types = tileSequence()
+        self.delegate = delegate
+        var kinds = tileSequence()
         for i in 0..<width {
             var col: [Tile] = []
             for j in 0..<height {
-                col.append(Tile(x: i, y: j, type: types.popLast()!, game: self))
+                col.append(Tile(x: i, y: j, kind: kinds.popLast()!, game: self))
             }
             grid.append(col)
         }
     }
     
     func flag(x: Int, y: Int) {
-        guard let col = grid[safe: x], let tile = col[safe: y] else {return}
+        guard let col = grid[safe: x], let tile = col[safe: y] else { return }
         switch tile.state {
         case .hidden:
             tile.state = .flagged
@@ -67,32 +78,39 @@ class Game {
         case .exploded:
             return
         }
+        delegate.gameDidUpdate([tile])
     }
     
     func sweep(x: Int, y: Int) {
-        guard let col = grid[safe: x], let tile = col[safe: y] else {return}
-        if (tile.state == .flagged) {return}
-        switch tile.type {
+        guard let col = grid[safe: x],
+            let tile = col[safe: y],
+            tile.state != .flagged
+            else { return }
+        switch tile.kind {
         case .safe:
-            tile.expand()
+            delegate.gameDidUpdate(tile.expand())
         case .mined:
             tile.state = .exploded
             state = .lost
+            delegate.gameDidUpdate([tile])
         }
     }
     
     func revealMines() {
+        var dirtyTiles = [Tile]()
         for col in grid {
             for tile in col {
-                if tile.type == .mined {
+                if tile.kind == .mined {
                     tile.state = .revealed
+                    dirtyTiles.append(tile)
                 }
             }
         }
+        delegate.gameDidUpdate(dirtyTiles)
     }
     
-    private func tileSequence() -> [Tile.TileType] {
-        var sequence = Array(repeating: Tile.TileType.safe, count: width * height)
+    private func tileSequence() -> [Tile.Kind] {
+        var sequence = Array(repeating: Tile.Kind.safe, count: width * height)
         if numMines < 1 {
             return sequence
         }
@@ -105,7 +123,6 @@ class Game {
         }
         return sequence
     }
-    
 }
 
 extension Game: CustomStringConvertible {
@@ -115,7 +132,7 @@ extension Game: CustomStringConvertible {
             for tile in col {
                 switch tile.state {
                 case .hidden:
-                    switch tile.type {
+                    switch tile.kind {
                     case .safe:
                         _description += "H"
                     case .mined:
@@ -141,12 +158,12 @@ extension Game: CustomStringConvertible {
 
 class Tile {
     
-    enum TileType {
+    enum Kind {
         case safe
         case mined
     }
     
-    enum TileState {
+    enum State {
         case hidden
         case cleared
         case revealed
@@ -154,7 +171,7 @@ class Tile {
         case exploded
     }
     
-    var game: Game
+    unowned var game: Game
     private var _neighbors: [Tile?]?
     var neighbors: [Tile?] {
         if _neighbors != nil {
@@ -182,7 +199,7 @@ class Tile {
             var count = 0
             for neighbor in neighbors {
                 if let neighbor = neighbor {
-                    if neighbor.type == .mined {
+                    if neighbor.kind == .mined {
                         count += 1
                     }
                 }
@@ -191,32 +208,33 @@ class Tile {
         }
         return _numAdjacentMines!
     }
-    var state: TileState = .hidden
-    var type:  TileType
-    private var x: Int
-    private var y: Int
+    var state = State.hidden
+    private(set) var kind: Kind
+    private(set) var x: Int
+    private(set) var y: Int
     
-    init(x: Int, y: Int, type: TileType, game: Game) {
+    init(x: Int, y: Int, kind: Kind, game: Game) {
         self.x    = x
         self.y    = y
-        self.type = type
+        self.kind = kind
         self.game = game
     }
     
-    fileprivate func expand() {
-        guard state == .hidden, type == .safe else {return}
+    func expand() -> [Tile] {
+        guard state == .hidden, kind == .safe else { return [] }
         state = .cleared
         game.numSafeTilesCleared += 1
+        var dirtyTiles = [self]
         if numAdjacentMines > 0 {
-            return
+            return dirtyTiles
         }
         for neighbor in neighbors {
             if let neighbor = neighbor {
-                neighbor.expand()
+                dirtyTiles.append(contentsOf: neighbor.expand())
             }
         }
+        return dirtyTiles
     }
-    
 }
 
 extension Collection {
