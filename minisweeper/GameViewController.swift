@@ -25,18 +25,10 @@ class GameViewController: NSViewController {
     }
     
     private func newGame() {
-        let gameHeight, gameWidth, gameMineCount: Int
-        guard let difficulty = Preset(rawValue: UserDefaults.standard.string(forKey: "difficulty")!) else {return}
-        switch difficulty {
-        case .easy, .medium, .hard:
-            guard let preset = OptionsWindowController.presets[difficulty] else {return}
-            gameHeight    = preset.gridSize.rows
-            gameWidth     = preset.gridSize.cols
-            gameMineCount = preset.numMines
-        case .custom:
-            gameHeight    = UserDefaults.standard.integer(forKey: "numRows")
-            gameWidth     = UserDefaults.standard.integer(forKey: "numCols")
-            gameMineCount = UserDefaults.standard.integer(forKey: "numMines")
+        if Preferences.difficulty == nil {
+            Preferences.setDefaults()
+        }
+        let (gridSize: (cols: gameWidth, rows: gameHeight), numMines: gameMineCount) = Preferences.options
         guard gameMineCount <= gameWidth * gameHeight else { fatalError() }
         game = Game(width: gameWidth, height: gameHeight, numMines: gameMineCount, delegate: self)
 

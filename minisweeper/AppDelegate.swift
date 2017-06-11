@@ -9,7 +9,7 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
+class AppDelegate: NSObject {
 
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var gameController: GameViewController!
@@ -19,42 +19,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     @IBAction func showOptionsWindow(_ sender: NSMenuItem) {
         optionsWindowController.showWindow(nil)
     }
-    
-    // MARK: - NSApplicationDelegate
-    
+}
+
+extension AppDelegate: NSApplicationDelegate {
+
     func applicationDidFinishLaunching(_ notification: Notification) {
-        UserDefaults.standard.register(defaults: [
-            "difficulty":  "Medium",
-            "numCols":     30,
-            "numRows":     20,
-            "numMines":    60,
-            "colorScheme": "Sierra"
-            ])
+        Preferences.registerDefaults()
         optionsWindowController = OptionsWindowController()
     }
-    
+
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
     }
-    
-    // MARK: - NSWindowDelegate
+}
+
+extension AppDelegate: NSWindowDelegate {
     
     func windowWillUseStandardFrame(_ window: NSWindow, defaultFrame newFrame: NSRect) -> NSRect {
         var size = gameController.gameViewSize
         size.height += window.frame.size.height - window.contentView!.frame.size.height
         return NSRect(origin: window.frame.origin, size: size)
     }
-    
+
     func windowShouldZoom(_ window: NSWindow, toFrame newFrame: NSRect) -> Bool {
         return window.frame.size != gameController.gameViewSize
     }
-    
+
     func windowWillEnterFullScreen(_ notification: Notification) {
         windowedFrame = window.frame
     }
-    
+
     func windowWillExitFullScreen(_ notification: Notification) {
         window.setFrame(windowedFrame!, display: false)
     }
-    
 }
