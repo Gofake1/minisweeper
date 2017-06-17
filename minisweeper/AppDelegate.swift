@@ -11,13 +11,18 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject {
 
-    @IBOutlet weak var window: NSWindow!
-    @IBOutlet weak var gameController: GameViewController!
+    @IBOutlet weak var gameWindow: NSWindow!
+    @IBOutlet weak var gameViewController: GameViewController!
     var optionsWindowController: OptionsWindowController!
+    var preferencesWindowController: PreferencesWindowController!
     var windowedFrame: NSRect?
     
     @IBAction func showOptionsWindow(_ sender: NSMenuItem) {
         optionsWindowController.showWindow(nil)
+    }
+
+    @IBAction func showPreferences(_ sender: NSMenuItem) {
+        preferencesWindowController.showWindow(nil)
     }
 }
 
@@ -26,6 +31,7 @@ extension AppDelegate: NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         Preferences.registerDefaults()
         optionsWindowController = OptionsWindowController()
+        preferencesWindowController = PreferencesWindowController()
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -36,20 +42,20 @@ extension AppDelegate: NSApplicationDelegate {
 extension AppDelegate: NSWindowDelegate {
     
     func windowWillUseStandardFrame(_ window: NSWindow, defaultFrame newFrame: NSRect) -> NSRect {
-        var size = gameController.gameViewSize
+        var size = gameViewController.gameViewSize
         size.height += window.frame.size.height - window.contentView!.frame.size.height
         return NSRect(origin: window.frame.origin, size: size)
     }
 
     func windowShouldZoom(_ window: NSWindow, toFrame newFrame: NSRect) -> Bool {
-        return window.frame.size != gameController.gameViewSize
+        return window.frame.size != gameViewController.gameViewSize
     }
 
     func windowWillEnterFullScreen(_ notification: Notification) {
-        windowedFrame = window.frame
+        windowedFrame = gameWindow.frame
     }
 
     func windowWillExitFullScreen(_ notification: Notification) {
-        window.setFrame(windowedFrame!, display: false)
+        gameWindow.setFrame(windowedFrame!, display: false)
     }
 }

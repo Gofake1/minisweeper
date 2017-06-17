@@ -25,9 +25,10 @@ struct Preferences {
     }
 
     static var options: Options {
-        switch difficulty ?? .medium {
+        let difficulty = self.difficulty ?? .medium
+        switch difficulty {
         case .easy, .medium, .hard:
-            return presets[difficulty ?? .medium]!
+            return presets[difficulty]!
         case .custom:
             return ((UserDefaults.standard.integer(forKey: "numCols"),
                      UserDefaults.standard.integer(forKey: "numRows")),

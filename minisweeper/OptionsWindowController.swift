@@ -64,10 +64,10 @@ class OptionsWindowController: NSWindowController {
 extension OptionsWindowController: NSControlTextEditingDelegate {
     func control(_ control: NSControl, isValidObject obj: Any?) -> Bool {
         // TODO: make error alert message more informative
-        switch control.tag {
-        case 0:
+        switch control {
+        case numRowsField, numColsField:
             return control.integerValue >= 10 && control.integerValue <= 100
-        case 1:
+        case numMinesField:
             return control.integerValue < numColsField.integerValue * numRowsField.integerValue
         default:
             return true

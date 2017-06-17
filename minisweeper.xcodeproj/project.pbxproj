@@ -12,11 +12,13 @@
 		4A8D98EA1DC40AF7008D7ABE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A8D98E81DC40AF7008D7ABE /* MainMenu.xib */; };
 		4A8D98F21DC40C7B008D7ABE /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D98F11DC40C7B008D7ABE /* Game.swift */; };
 		4A8D98F61DC449C6008D7ABE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D98F51DC449C6008D7ABE /* GameViewController.swift */; };
+		4AB67A6C1EF4E9AB00EB3A65 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AB67A6A1EF4E9AB00EB3A65 /* PreferencesWindowController.swift */; };
+		4AB67A771EF4EA9700EB3A65 /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AB67A761EF4EA5B00EB3A65 /* PreferencesWindowController.xib */; };
+		4AB67A7A1EF4EB4700EB3A65 /* OptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AB67A7C1EF4EB4700EB3A65 /* OptionsWindowController.xib */; };
 		4AD166501EECE8E2009E4E34 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD1664F1EECE8E2009E4E34 /* Preferences.swift */; };
 		4AD166521EECEBC9009E4E34 /* NSBezierPath+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD166511EECEBC9009E4E34 /* NSBezierPath+.swift */; };
 		4AD166541EED0182009E4E34 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 4AD166531EED0182009E4E34 /* LICENSE */; };
 		4AE429A01DC9D0F8003D15B2 /* OptionsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE4299E1DC9D0F8003D15B2 /* OptionsWindowController.swift */; };
-		4AE429A11DC9D0F8003D15B2 /* OptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AE4299F1DC9D0F8003D15B2 /* OptionsWindowController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,12 +30,14 @@
 		4A8D98EB1DC40AF7008D7ABE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4A8D98F11DC40C7B008D7ABE /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Game.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		4A8D98F51DC449C6008D7ABE /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		4AB67A6A1EF4E9AB00EB3A65 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
+		4AB67A751EF4EA5B00EB3A65 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/PreferencesWindowController.xib; sourceTree = "<group>"; };
+		4AB67A7B1EF4EB4700EB3A65 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/OptionsWindowController.xib; sourceTree = "<group>"; };
 		4AC3DDBF1EC2990D00E08B8D /* minisweeper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = minisweeper.entitlements; sourceTree = "<group>"; };
 		4AD1664F1EECE8E2009E4E34 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		4AD166511EECEBC9009E4E34 /* NSBezierPath+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSBezierPath+.swift"; sourceTree = "<group>"; };
 		4AD166531EED0182009E4E34 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		4AE4299E1DC9D0F8003D15B2 /* OptionsWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsWindowController.swift; sourceTree = "<group>"; };
-		4AE4299F1DC9D0F8003D15B2 /* OptionsWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OptionsWindowController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,13 +73,15 @@
 			isa = PBXGroup;
 			children = (
 				4A8D98E81DC40AF7008D7ABE /* MainMenu.xib */,
-				4AE4299F1DC9D0F8003D15B2 /* OptionsWindowController.xib */,
+				4AB67A7C1EF4EB4700EB3A65 /* OptionsWindowController.xib */,
+				4AB67A761EF4EA5B00EB3A65 /* PreferencesWindowController.xib */,
 				4A8D98E41DC40AF7008D7ABE /* AppDelegate.swift */,
 				4A8D98F11DC40C7B008D7ABE /* Game.swift */,
 				4A8D98F51DC449C6008D7ABE /* GameViewController.swift */,
 				4AD166511EECEBC9009E4E34 /* NSBezierPath+.swift */,
 				4AE4299E1DC9D0F8003D15B2 /* OptionsWindowController.swift */,
 				4AD1664F1EECE8E2009E4E34 /* Preferences.swift */,
+				4AB67A6A1EF4E9AB00EB3A65 /* PreferencesWindowController.swift */,
 				4A8D98E61DC40AF7008D7ABE /* Assets.xcassets */,
 				4A8D98EB1DC40AF7008D7ABE /* Info.plist */,
 				4AC3DDBF1EC2990D00E08B8D /* minisweeper.entitlements */,
@@ -149,10 +155,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AB67A7A1EF4EB4700EB3A65 /* OptionsWindowController.xib in Resources */,
+				4AB67A771EF4EA9700EB3A65 /* PreferencesWindowController.xib in Resources */,
 				4A8D98E71DC40AF7008D7ABE /* Assets.xcassets in Resources */,
 				4A8D98EA1DC40AF7008D7ABE /* MainMenu.xib in Resources */,
 				4AD166541EED0182009E4E34 /* LICENSE in Resources */,
-				4AE429A11DC9D0F8003D15B2 /* OptionsWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +174,7 @@
 				4AE429A01DC9D0F8003D15B2 /* OptionsWindowController.swift in Sources */,
 				4A8D98F61DC449C6008D7ABE /* GameViewController.swift in Sources */,
 				4AD166501EECE8E2009E4E34 /* Preferences.swift in Sources */,
+				4AB67A6C1EF4E9AB00EB3A65 /* PreferencesWindowController.swift in Sources */,
 				4A8D98E51DC40AF7008D7ABE /* AppDelegate.swift in Sources */,
 				4A8D98F21DC40C7B008D7ABE /* Game.swift in Sources */,
 			);
@@ -181,6 +189,23 @@
 				4A8D98E91DC40AF7008D7ABE /* Base */,
 			);
 			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+		4AB67A761EF4EA5B00EB3A65 /* PreferencesWindowController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4AB67A751EF4EA5B00EB3A65 /* Base */,
+			);
+			name = PreferencesWindowController.xib;
+			sourceTree = "<group>";
+		};
+		4AB67A7C1EF4EB4700EB3A65 /* OptionsWindowController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4AB67A7B1EF4EB4700EB3A65 /* Base */,
+			);
+			name = OptionsWindowController.xib;
+			path = Base.lproj;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
