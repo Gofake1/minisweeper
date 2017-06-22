@@ -10,7 +10,13 @@ import Cocoa
 
 class PreferencesWindowController: NSWindowController {
 
+    weak var scoresController: ScoresController?
+
     override var windowNibName: NSNib.Name? {
-        return NSNib.Name("PreferencesWindowcontroller")
+        return NSNib.Name("PreferencesWindowController")
+    }
+
+    @IBAction func resetHighScores(_ sender: NSButton) {
+        scoresController?.reset()
     }
 }

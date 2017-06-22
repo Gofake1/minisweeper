@@ -15,7 +15,9 @@ protocol GameDelegate: class {
 class Game {
     
     enum State {
+        case notStarted
         case inProgress
+        case paused
         case won
         case lost
     }
@@ -40,13 +42,15 @@ class Game {
         return (x, y)
     }
 
-    private(set) var grid:     [[Tile]] = []
-    private(set) var height:   Int
-    private(set) var width:    Int
+    let height:   Int
+    let width:    Int
+    let numMines: Int
+    private(set) var grid     = [[Tile]]()
     private(set) var numFlags = 0
-    private(set) var numMines: Int
-    private(set) var state = State.inProgress
+    private(set) var state    = State.notStarted
+    private(set) var elapsedTime: TimeInterval = 0
     private unowned var delegate: GameDelegate
+    private var startTime: Date?
     
     /// - parameter numMines: must be less than width times height
     init(width: Int, height: Int, numMines: Int, delegate: GameDelegate) {
@@ -65,6 +69,7 @@ class Game {
     }
     
     func flag(x: Int, y: Int) {
+        guard state == .inProgress else { fatalError() }
         guard let col = grid[safe: x], let tile = col[safe: y] else { return }
         switch tile.state {
         case .hidden:
@@ -80,33 +85,47 @@ class Game {
         }
         delegate.gameDidUpdate([tile])
     }
-    
+
     func sweep(x: Int, y: Int) {
+        guard state == .inProgress else { fatalError() }
         guard let col = grid[safe: x],
             let tile = col[safe: y],
             tile.state != .flagged
             else { return }
         switch tile.kind {
         case .safe:
-            delegate.gameDidUpdate(tile.expand())
+            let revealedTiles = tile.expand()
+            if state == .won {
+                stopTiming()
+                delegate.gameDidUpdate(revealedTiles + revealMines())
+            } else {
+                delegate.gameDidUpdate(revealedTiles)
+            }
         case .mined:
+            stopTiming()
             tile.state = .exploded
             state = .lost
-            delegate.gameDidUpdate([tile])
+            delegate.gameDidUpdate(revealMines())
         }
     }
-    
-    func revealMines() {
-        var dirtyTiles = [Tile]()
-        for col in grid {
-            for tile in col {
-                if tile.kind == .mined {
-                    tile.state = .revealed
-                    dirtyTiles.append(tile)
-                }
-            }
-        }
-        delegate.gameDidUpdate(dirtyTiles)
+
+    /// Start counting elapsed time
+    func resume() {
+        state = .inProgress
+        startTime = Date()
+    }
+
+    /// Stop counting elapsed Time
+    func pause() {
+        state = .paused
+        stopTiming()
+    }
+
+    /// - postcondition: Mutates `elapsedTime`
+    private func stopTiming() {
+        defer { startTime = nil }
+        guard let startTime = startTime else { fatalError() }
+        elapsedTime += Date().timeIntervalSince(startTime)
     }
     
     private func tileSequence() -> [Tile.Kind] {
@@ -122,6 +141,21 @@ class Game {
             sequence[pos] = .mined
         }
         return sequence
+    }
+
+    private func revealMines() -> [Tile] {
+        var tiles = [Tile]()
+        for col in grid {
+            for tile in col {
+                if tile.kind == .mined {
+                    if tile.state != .exploded {
+                        tile.state = .revealed
+                    }
+                    tiles.append(tile)
+                }
+            }
+        }
+        return tiles
     }
 }
 
@@ -153,8 +187,6 @@ extension Game: CustomStringConvertible {
         return _description
     }
 }
-
-
 
 class Tile {
     

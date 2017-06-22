@@ -13,9 +13,24 @@ class AppDelegate: NSObject {
 
     @IBOutlet weak var gameWindow: NSWindow!
     @IBOutlet weak var gameViewController: GameViewController!
+    var highScoresWindowController: HighScoresWindowController!
     var optionsWindowController: OptionsWindowController!
     var preferencesWindowController: PreferencesWindowController!
+    var scoresController: ScoresController!
     var windowedFrame: NSRect?
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: "minisweeper")
+        container.loadPersistentStores { (storeDescription, error) in
+            if let error = error as NSError? {
+                fatalError("Persistant container: \(storeDescription) failed with error \(error)")
+            }
+        }
+        return container
+    }()
+
+    @IBAction func showHighScores(_ sender: NSMenuItem) {
+        highScoresWindowController.showWindow(nil)
+    }
     
     @IBAction func showOptionsWindow(_ sender: NSMenuItem) {
         optionsWindowController.showWindow(nil)
@@ -30,8 +45,14 @@ extension AppDelegate: NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         Preferences.registerDefaults()
+        highScoresWindowController = HighScoresWindowController()
         optionsWindowController = OptionsWindowController()
         preferencesWindowController = PreferencesWindowController()
+        scoresController = ScoresController(persistentContainer)
+
+        highScoresWindowController.managedObjectContext = persistentContainer.viewContext
+        gameViewController.scoresController = scoresController
+        preferencesWindowController.scoresController = scoresController
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -56,6 +77,8 @@ extension AppDelegate: NSWindowDelegate {
     }
 
     func windowWillExitFullScreen(_ notification: Notification) {
-        gameWindow.setFrame(windowedFrame!, display: false)
+        if let windowedFrame = windowedFrame {
+            gameWindow.setFrame(windowedFrame, display: false)
+        }
     }
 }

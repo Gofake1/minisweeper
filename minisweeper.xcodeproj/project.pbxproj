@@ -12,9 +12,13 @@
 		4A8D98EA1DC40AF7008D7ABE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A8D98E81DC40AF7008D7ABE /* MainMenu.xib */; };
 		4A8D98F21DC40C7B008D7ABE /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D98F11DC40C7B008D7ABE /* Game.swift */; };
 		4A8D98F61DC449C6008D7ABE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D98F51DC449C6008D7ABE /* GameViewController.swift */; };
+		4A8F17F01EF5ED70004082EE /* minisweeper.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4A4407A01EF4E320004ADA3C /* minisweeper.xcdatamodeld */; };
 		4AB67A6C1EF4E9AB00EB3A65 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AB67A6A1EF4E9AB00EB3A65 /* PreferencesWindowController.swift */; };
+		4AB67A711EF4E9E100EB3A65 /* HighScoresWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A44079C1EF4E109004ADA3C /* HighScoresWindowController.xib */; };
 		4AB67A771EF4EA9700EB3A65 /* PreferencesWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AB67A761EF4EA5B00EB3A65 /* PreferencesWindowController.xib */; };
+		4AB67A791EF4EB3D00EB3A65 /* HighScoresWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A4407951EF4E05E004ADA3C /* HighScoresWindowController.swift */; };
 		4AB67A7A1EF4EB4700EB3A65 /* OptionsWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4AB67A7C1EF4EB4700EB3A65 /* OptionsWindowController.xib */; };
+		4AB67A7D1EF4EB7D00EB3A65 /* ScoresController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A44079D1EF4E1ED004ADA3C /* ScoresController.swift */; };
 		4AD166501EECE8E2009E4E34 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD1664F1EECE8E2009E4E34 /* Preferences.swift */; };
 		4AD166521EECEBC9009E4E34 /* NSBezierPath+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD166511EECEBC9009E4E34 /* NSBezierPath+.swift */; };
 		4AD166541EED0182009E4E34 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 4AD166531EED0182009E4E34 /* LICENSE */; };
@@ -22,6 +26,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4A4407951EF4E05E004ADA3C /* HighScoresWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighScoresWindowController.swift; sourceTree = "<group>"; };
+		4A44079B1EF4E109004ADA3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HighScoresWindowController.xib; sourceTree = "<group>"; };
+		4A44079D1EF4E1ED004ADA3C /* ScoresController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresController.swift; sourceTree = "<group>"; };
+		4A4407A11EF4E320004ADA3C /* minisweeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = minisweeper.xcdatamodel; sourceTree = "<group>"; };
 		4A6E32B41DD3121500444B1A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4A8D98E11DC40AF7008D7ABE /* minisweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minisweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A8D98E41DC40AF7008D7ABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -72,16 +80,20 @@
 		4A8D98E31DC40AF7008D7ABE /* minisweeper */ = {
 			isa = PBXGroup;
 			children = (
+				4A44079C1EF4E109004ADA3C /* HighScoresWindowController.xib */,
 				4A8D98E81DC40AF7008D7ABE /* MainMenu.xib */,
 				4AB67A7C1EF4EB4700EB3A65 /* OptionsWindowController.xib */,
 				4AB67A761EF4EA5B00EB3A65 /* PreferencesWindowController.xib */,
 				4A8D98E41DC40AF7008D7ABE /* AppDelegate.swift */,
 				4A8D98F11DC40C7B008D7ABE /* Game.swift */,
 				4A8D98F51DC449C6008D7ABE /* GameViewController.swift */,
+				4A4407951EF4E05E004ADA3C /* HighScoresWindowController.swift */,
 				4AD166511EECEBC9009E4E34 /* NSBezierPath+.swift */,
 				4AE4299E1DC9D0F8003D15B2 /* OptionsWindowController.swift */,
 				4AD1664F1EECE8E2009E4E34 /* Preferences.swift */,
 				4AB67A6A1EF4E9AB00EB3A65 /* PreferencesWindowController.swift */,
+				4A44079D1EF4E1ED004ADA3C /* ScoresController.swift */,
+				4A4407A01EF4E320004ADA3C /* minisweeper.xcdatamodeld */,
 				4A8D98E61DC40AF7008D7ABE /* Assets.xcassets */,
 				4A8D98EB1DC40AF7008D7ABE /* Info.plist */,
 				4AC3DDBF1EC2990D00E08B8D /* minisweeper.entitlements */,
@@ -157,6 +169,7 @@
 			files = (
 				4AB67A7A1EF4EB4700EB3A65 /* OptionsWindowController.xib in Resources */,
 				4AB67A771EF4EA9700EB3A65 /* PreferencesWindowController.xib in Resources */,
+				4AB67A711EF4E9E100EB3A65 /* HighScoresWindowController.xib in Resources */,
 				4A8D98E71DC40AF7008D7ABE /* Assets.xcassets in Resources */,
 				4A8D98EA1DC40AF7008D7ABE /* MainMenu.xib in Resources */,
 				4AD166541EED0182009E4E34 /* LICENSE in Resources */,
@@ -170,10 +183,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A8F17F01EF5ED70004082EE /* minisweeper.xcdatamodeld in Sources */,
 				4AD166521EECEBC9009E4E34 /* NSBezierPath+.swift in Sources */,
+				4AB67A7D1EF4EB7D00EB3A65 /* ScoresController.swift in Sources */,
 				4AE429A01DC9D0F8003D15B2 /* OptionsWindowController.swift in Sources */,
 				4A8D98F61DC449C6008D7ABE /* GameViewController.swift in Sources */,
 				4AD166501EECE8E2009E4E34 /* Preferences.swift in Sources */,
+				4AB67A791EF4EB3D00EB3A65 /* HighScoresWindowController.swift in Sources */,
 				4AB67A6C1EF4E9AB00EB3A65 /* PreferencesWindowController.swift in Sources */,
 				4A8D98E51DC40AF7008D7ABE /* AppDelegate.swift in Sources */,
 				4A8D98F21DC40C7B008D7ABE /* Game.swift in Sources */,
@@ -183,6 +199,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		4A44079C1EF4E109004ADA3C /* HighScoresWindowController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4A44079B1EF4E109004ADA3C /* Base */,
+			);
+			name = HighScoresWindowController.xib;
+			sourceTree = "<group>";
+		};
 		4A8D98E81DC40AF7008D7ABE /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -379,6 +403,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4A4407A01EF4E320004ADA3C /* minisweeper.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4A4407A11EF4E320004ADA3C /* minisweeper.xcdatamodel */,
+			);
+			currentVersion = 4A4407A11EF4E320004ADA3C /* minisweeper.xcdatamodel */;
+			path = minisweeper.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 4A8D98D91DC40AF7008D7ABE /* Project object */;
 }

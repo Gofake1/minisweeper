@@ -13,6 +13,7 @@ class GameViewController: NSViewController {
     var gameViewSize: NSSize {
         return NSSize(width: game.width*20, height: game.height*20)
     }
+    weak var scoresController: ScoresController?
     private var game: Game!
     private var gameViewLayer = CALayer()
     private var tileShapeLayers: [[CAShapeLayer]]!
@@ -54,7 +55,7 @@ class GameViewController: NSViewController {
         }
 
         view.window?.title = "\(game.numMines) mines"
-        view.window?.performZoom(nil)
+        //view.window?.performZoom(nil)
         drawGame(game.allTiles)
     }
 
@@ -92,6 +93,7 @@ class GameViewController: NSViewController {
                 textLayer.string = "🚩"
             case .hidden:
                 shapeLayer.fillColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
+                textLayer.string = ""
             case .revealed:
                 textLayer.string = "💣"
             }
@@ -113,37 +115,48 @@ class GameViewController: NSViewController {
     }
 
     /// - postcondition: Will call `gameDidUpdate`
-    private func endGame() {
-        switch game.state {
-        case .won:
+    private func endGame(_ won: Bool) {
+        switch won {
+        case true:
             view.window?.title = "Congratulations"
-        case .lost:
+            scoresController?.addScore(Score(date:     Date(),
+                                             numCols:  game.width,
+                                             numMines: game.numMines,
+                                             numRows:  game.height,
+                                             time:     game.elapsedTime))
+        case false:
             view.window?.title = "Uh-oh"
-        default:
-            fatalError("Invalid state \(game.state)")
         }
-        game.revealMines()
     }
 
     /// - postcondition: Will call `gameDidUpdate`
     override func mouseDown(with event: NSEvent) {
-        guard game.state == .inProgress else {
+        switch game.state {
+        case .notStarted:
+            game.resume()
+            game.sweep(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
+        case .inProgress:
+            game.sweep(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
+        case .paused:
+            game.resume()
+        case .won, .lost:
             newGame()
-            return
-        }
-        game.sweep(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
-        if game.state != .inProgress {
-            endGame()
         }
     }
 
     /// - postcondition: Will call `gameDidUpdate`
     override func rightMouseDown(with event: NSEvent) {
-        guard game.state == .inProgress else {
+        switch game.state {
+        case .notStarted:
+            game.resume()
+            game.flag(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
+        case .inProgress:
+            game.flag(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
+        case .paused:
+            game.resume()
+        case .won, .lost:
             newGame()
-            return
         }
-        game.flag(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
     }
     
     @IBAction func startNewGame(_ sender: NSMenuItem) {
@@ -154,5 +167,8 @@ class GameViewController: NSViewController {
 extension GameViewController: GameDelegate {
     func gameDidUpdate(_ dirtyTiles: [Tile]) {
         drawGame(dirtyTiles)
+        if game.state == .won || game.state == .lost {
+            endGame(game.state == .won)
+        }
     }
 }
