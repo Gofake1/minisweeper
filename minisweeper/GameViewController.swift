@@ -18,9 +18,11 @@ class GameViewController: NSViewController {
     private var gameViewLayer = CALayer()
     private var tileShapeLayers: [[CAShapeLayer]]!
     private var tileTextLayers: [[CATextLayer]]!
+    private var previousGameSize: (Int, Int)?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.wantsLayer = true
         view.layer?.addSublayer(gameViewLayer)
         newGame()
     }
@@ -33,26 +35,30 @@ class GameViewController: NSViewController {
         guard gameMineCount <= gameWidth * gameHeight else { fatalError() }
         game = Game(width: gameWidth, height: gameHeight, numMines: gameMineCount, delegate: self)
 
-        gameViewLayer.sublayers = nil
-        tileShapeLayers = makeLayers(width: game.width, height: game.height) {
-            let path = NSBezierPath()
-            path.move(to: NSPoint(x: $1.x*20,    y: $1.y*20))
-            path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20))
-            path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20+20))
-            path.line(to: NSPoint(x: $1.x*20,    y: $1.y*20+20))
-            $0.path = path.cgPath
-            $0.strokeColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1).cgColor
-            $0.lineWidth = 0.5
-            gameViewLayer.addSublayer($0)
-            return $0
+        // (Re)create layers if first run or game dimensions changed
+        if previousGameSize == nil || previousGameSize! != (gameWidth, gameHeight) {
+            gameViewLayer.sublayers = nil
+            tileShapeLayers = makeLayers(width: game.width, height: game.height) {
+                let path = NSBezierPath()
+                path.move(to: NSPoint(x: $1.x*20,    y: $1.y*20))
+                path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20))
+                path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20+20))
+                path.line(to: NSPoint(x: $1.x*20,    y: $1.y*20+20))
+                $0.path = path.cgPath
+                $0.strokeColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1).cgColor
+                $0.lineWidth = 0.5
+                gameViewLayer.addSublayer($0)
+                return $0
+            }
+            tileTextLayers = makeLayers(width: game.width, height: game.height) {
+                $0.alignmentMode = kCAAlignmentCenter
+                $0.fontSize = 13.5
+                $0.frame = NSRect(x: $1.x*20, y: $1.y*20, width: 20, height: 20)
+                gameViewLayer.addSublayer($0)
+                return $0
+            }
         }
-        tileTextLayers = makeLayers(width: game.width, height: game.height) {
-            $0.alignmentMode = kCAAlignmentCenter
-            $0.fontSize = 13.5
-            $0.frame = NSRect(x: $1.x*20, y: $1.y*20, width: 20, height: 20)
-            gameViewLayer.addSublayer($0)
-            return $0
-        }
+        previousGameSize = (gameWidth, gameHeight)
 
         view.window?.title = "\(game.numMines) mines"
         //view.window?.performZoom(nil)
@@ -114,7 +120,6 @@ class GameViewController: NSViewController {
         }
     }
 
-    /// - postcondition: Will call `gameDidUpdate`
     private func endGame(_ won: Bool) {
         switch won {
         case true:
