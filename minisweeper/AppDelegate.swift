@@ -17,7 +17,6 @@ class AppDelegate: NSObject {
     var optionsWindowController: OptionsWindowController!
     var preferencesWindowController: PreferencesWindowController!
     var scoresController: ScoresController!
-    var windowedFrame: NSRect?
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "minisweeper")
         container.loadPersistentStores { (storeDescription, error) in
@@ -44,7 +43,6 @@ class AppDelegate: NSObject {
 extension AppDelegate: NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        Preferences.registerDefaults()
         highScoresWindowController = HighScoresWindowController()
         optionsWindowController = OptionsWindowController()
         preferencesWindowController = PreferencesWindowController()
@@ -69,16 +67,6 @@ extension AppDelegate: NSWindowDelegate {
     }
 
     func windowShouldZoom(_ window: NSWindow, toFrame newFrame: NSRect) -> Bool {
-        return window.frame.size != gameViewController.gameViewSize
-    }
-
-    func windowWillEnterFullScreen(_ notification: Notification) {
-        windowedFrame = gameWindow.frame
-    }
-
-    func windowWillExitFullScreen(_ notification: Notification) {
-        if let windowedFrame = windowedFrame {
-            gameWindow.setFrame(windowedFrame, display: false)
-        }
+        return window.contentView?.frame.size != gameViewController.gameViewSize
     }
 }

@@ -14,55 +14,116 @@ class GameViewController: NSViewController {
         return NSSize(width: game.width*20, height: game.height*20)
     }
     weak var scoresController: ScoresController?
+    private var colorScheme: ColorScheme!
     private var game: Game!
+    private var gameView: NSView!
     private var gameViewLayer = CALayer()
+    private weak var gameViewWidthConstraint:  NSLayoutConstraint?
+    private weak var gameViewHeightConstraint: NSLayoutConstraint?
     private var tileShapeLayers: [[CAShapeLayer]]!
-    private var tileTextLayers: [[CATextLayer]]!
-    private var previousGameSize: (Int, Int)?
+    private var tileTextLayers:  [[CATextLayer]]!
+    private var previousGameOptions: Options?
+    private var nextGameOptions:     Options?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.wantsLayer = true
-        view.layer?.addSublayer(gameViewLayer)
-        newGame()
-    }
-    
-    private func newGame() {
         if Preferences.difficulty == nil {
             Preferences.setDefaults()
         }
-        let (gridSize: (cols: gameWidth, rows: gameHeight), numMines: gameMineCount) = Preferences.options
-        guard gameMineCount <= gameWidth * gameHeight else { fatalError() }
-        game = Game(width: gameWidth, height: gameHeight, numMines: gameMineCount, delegate: self)
+        colorScheme = Preferences.colorScheme
+        nextGameOptions = Preferences.options
+        newGame()
+
+        gameView = NSView(frame: NSRect(origin: view.bounds.origin, size: gameViewSize))
+        view.addSubview(gameView)
+        gameView.wantsLayer = true
+        gameView.layer?.addSublayer(gameViewLayer)
+
+        gameView.translatesAutoresizingMaskIntoConstraints = false
+        gameViewWidthConstraint = gameView.widthAnchor.constraint(equalToConstant: gameViewSize.width)
+        gameViewHeightConstraint = gameView.heightAnchor.constraint(equalToConstant: gameViewSize.height)
+        let centerX = NSLayoutConstraint(item:       gameView,
+                                         attribute:  .centerX,
+                                         relatedBy:  .equal,
+                                         toItem:     view,
+                                         attribute:  .centerX,
+                                         multiplier: 1.0,
+                                         constant:   0.0)
+        let centerY = NSLayoutConstraint(item:       gameView,
+                                         attribute:  .centerY,
+                                         relatedBy:  .equal,
+                                         toItem:     view,
+                                         attribute:  .centerY,
+                                         multiplier: 1.0,
+                                         constant:   0.0)
+        NSLayoutConstraint.activate([gameViewWidthConstraint!, gameViewHeightConstraint!, centerX, centerY])
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(userDefaultsDidChange(_:)),
+                                               name: UserDefaults.didChangeNotification,
+                                               object: UserDefaults.standard)
+
+        view.window?.zoom(nil)
+    }
+
+    @objc func userDefaultsDidChange(_ sender: UserDefaults) {
+        if colorScheme! != Preferences.colorScheme {
+            colorScheme = Preferences.colorScheme
+            drawGame(game.allTiles)
+        }
+        previousGameOptions = nextGameOptions
+        nextGameOptions = Preferences.options
+    }
+
+    /// - postcondition: Adds sublayers to `gameViewLayer`, mutates `game`, `tileShapeLayers`,
+    ///   `tileTextLayers`, and `previousGameSize`
+    private func newGame() {
+        guard let options = nextGameOptions,
+            options.numMines <= options.gridSize.cols * options.gridSize.rows
+            else { fatalError() }
+        game = Game(size: options.gridSize, numMines: options.numMines, delegate: self)
 
         // (Re)create layers if first run or game dimensions changed
-        if previousGameSize == nil || previousGameSize! != (gameWidth, gameHeight) {
-            gameViewLayer.sublayers = nil
-            tileShapeLayers = makeLayers(width: game.width, height: game.height) {
-                let path = NSBezierPath()
-                path.move(to: NSPoint(x: $1.x*20,    y: $1.y*20))
-                path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20))
-                path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20+20))
-                path.line(to: NSPoint(x: $1.x*20,    y: $1.y*20+20))
-                $0.path = path.cgPath
-                $0.strokeColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1).cgColor
-                $0.lineWidth = 0.5
-                gameViewLayer.addSublayer($0)
-                return $0
-            }
-            tileTextLayers = makeLayers(width: game.width, height: game.height) {
-                $0.alignmentMode = kCAAlignmentCenter
-                $0.fontSize = 13.5
-                $0.frame = NSRect(x: $1.x*20, y: $1.y*20, width: 20, height: 20)
-                gameViewLayer.addSublayer($0)
-                return $0
+        if previousGameOptions == nil || previousGameOptions!.gridSize != options.gridSize {
+            resetGameBoard()
+            // Reset constraints
+            if gameView != nil {
+                gameViewWidthConstraint?.isActive = false
+                gameViewHeightConstraint?.isActive = false
+                gameViewWidthConstraint = gameView.widthAnchor.constraint(equalToConstant:
+                    gameViewSize.width)
+                gameViewHeightConstraint = gameView.heightAnchor.constraint(equalToConstant:
+                    gameViewSize.height)
+                NSLayoutConstraint.activate([gameViewWidthConstraint!, gameViewHeightConstraint!])
             }
         }
-        previousGameSize = (gameWidth, gameHeight)
 
+        previousGameOptions = options
         view.window?.title = "\(game.numMines) mines"
-        //view.window?.performZoom(nil)
         drawGame(game.allTiles)
+    }
+
+    private func resetGameBoard() {
+        gameViewLayer.sublayers = nil
+        tileShapeLayers = makeLayers(width: game.width, height: game.height) {
+            let path = NSBezierPath()
+            path.move(to: NSPoint(x: $1.x*20,    y: $1.y*20))
+            path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20))
+            path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20+20))
+            path.line(to: NSPoint(x: $1.x*20,    y: $1.y*20+20))
+            $0.path = path.cgPath
+            $0.strokeColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1).cgColor
+            $0.lineWidth = 0.5
+            gameViewLayer.addSublayer($0)
+            return $0
+        }
+        tileTextLayers = makeLayers(width: game.width, height: game.height) {
+            $0.alignmentMode = kCAAlignmentCenter
+            $0.fontSize = 13.5
+            $0.frame = NSRect(x: $1.x*20, y: $1.y*20, width: 20, height: 20)
+            gameViewLayer.addSublayer($0)
+            return $0
+        }
     }
 
     private func makeLayers<T: CALayer>(width: Int, height: Int, setup: (T, (x: Int, y: Int)) -> T) -> [[T]] {
@@ -84,7 +145,7 @@ class GameViewController: NSViewController {
 
             switch tile.state {
             case .cleared:
-                shapeLayer.fillColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0).cgColor
+                shapeLayer.fillColor = colorScheme.tileColorCleared
                 if tile.numAdjacentMines != 0 {
                     textLayer.string = "\(tile.numAdjacentMines)"
                 }
@@ -92,13 +153,13 @@ class GameViewController: NSViewController {
                     textLayer.foregroundColor = textColor
                 }
             case .exploded:
-                shapeLayer.fillColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1).cgColor
+                shapeLayer.fillColor = colorScheme.tileColorExploded
                 textLayer.string = "💥"
             case .flagged:
-                shapeLayer.fillColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1).cgColor
+                shapeLayer.fillColor = colorScheme.tileColorFlagged
                 textLayer.string = "🚩"
             case .hidden:
-                shapeLayer.fillColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1).cgColor
+                shapeLayer.fillColor = colorScheme.tileColorHidden
                 textLayer.string = ""
             case .revealed:
                 textLayer.string = "💣"
@@ -108,14 +169,14 @@ class GameViewController: NSViewController {
 
     private func textColorForTile(_ tile: Tile) -> CGColor? {
         switch tile.numAdjacentMines {
-        case 1:  return #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1).cgColor
-        case 2:  return #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1).cgColor
-        case 3:  return #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1).cgColor
-        case 4:  return #colorLiteral(red: 0.5843137503, green: 0.8235294223, blue: 0.4196078479, alpha: 1).cgColor
-        case 5:  return #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1).cgColor
-        case 6:  return #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1).cgColor
-        case 7:  return #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1).cgColor
-        case 8:  return #colorLiteral(red: 0.3176470697, green: 0.07450980693, blue: 0.02745098062, alpha: 1).cgColor
+        case 1:  return colorScheme.textColor1Mine
+        case 2:  return colorScheme.textColor2Mine
+        case 3:  return colorScheme.textColor3Mine
+        case 4:  return colorScheme.textColor4Mine
+        case 5:  return colorScheme.textColor5Mine
+        case 6:  return colorScheme.textColor6Mine
+        case 7:  return colorScheme.textColor7Mine
+        case 8:  return colorScheme.textColor8Mine
         default: return nil
         }
     }
@@ -135,13 +196,15 @@ class GameViewController: NSViewController {
     }
 
     /// - postcondition: Will call `gameDidUpdate`
-    override func mouseDown(with event: NSEvent) {
+    override func mouseUp(with event: NSEvent) {
         switch game.state {
         case .notStarted:
             game.resume()
-            game.sweep(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
+            let point = gameView.convert(event.locationInWindow, from: nil)
+            game.sweep(x: Int(point.x/20), y: Int(point.y/20))
         case .inProgress:
-            game.sweep(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
+            let point = gameView.convert(event.locationInWindow, from: nil)
+            game.sweep(x: Int(point.x/20), y: Int(point.y/20))
         case .paused:
             game.resume()
         case .won, .lost:

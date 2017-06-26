@@ -53,9 +53,9 @@ class Game {
     private var startTime: Date?
     
     /// - parameter numMines: must be less than width times height
-    init(width: Int, height: Int, numMines: Int, delegate: GameDelegate) {
-        self.width    = width
-        self.height   = height
+    init(size: (Int, Int), numMines: Int, delegate: GameDelegate) {
+        self.width    = size.0
+        self.height   = size.1
         self.numMines = numMines
         self.delegate = delegate
         var kinds = tileSequence()

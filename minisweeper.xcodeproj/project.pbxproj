@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A695E071EFE19F40045AC1B /* ColorScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A695E061EFE19F40045AC1B /* ColorScheme.swift */; };
 		4A8D98E51DC40AF7008D7ABE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D98E41DC40AF7008D7ABE /* AppDelegate.swift */; };
 		4A8D98E71DC40AF7008D7ABE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4A8D98E61DC40AF7008D7ABE /* Assets.xcassets */; };
 		4A8D98EA1DC40AF7008D7ABE /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4A8D98E81DC40AF7008D7ABE /* MainMenu.xib */; };
@@ -30,6 +31,7 @@
 		4A44079B1EF4E109004ADA3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/HighScoresWindowController.xib; sourceTree = "<group>"; };
 		4A44079D1EF4E1ED004ADA3C /* ScoresController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresController.swift; sourceTree = "<group>"; };
 		4A4407A11EF4E320004ADA3C /* minisweeper.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = minisweeper.xcdatamodel; sourceTree = "<group>"; };
+		4A695E061EFE19F40045AC1B /* ColorScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorScheme.swift; sourceTree = "<group>"; };
 		4A6E32B41DD3121500444B1A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		4A8D98E11DC40AF7008D7ABE /* minisweeper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = minisweeper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A8D98E41DC40AF7008D7ABE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 				4AB67A7C1EF4EB4700EB3A65 /* OptionsWindowController.xib */,
 				4AB67A761EF4EA5B00EB3A65 /* PreferencesWindowController.xib */,
 				4A8D98E41DC40AF7008D7ABE /* AppDelegate.swift */,
+				4A695E061EFE19F40045AC1B /* ColorScheme.swift */,
 				4A8D98F11DC40C7B008D7ABE /* Game.swift */,
 				4A8D98F51DC449C6008D7ABE /* GameViewController.swift */,
 				4A4407951EF4E05E004ADA3C /* HighScoresWindowController.swift */,
@@ -189,6 +192,7 @@
 				4AE429A01DC9D0F8003D15B2 /* OptionsWindowController.swift in Sources */,
 				4A8D98F61DC449C6008D7ABE /* GameViewController.swift in Sources */,
 				4AD166501EECE8E2009E4E34 /* Preferences.swift in Sources */,
+				4A695E071EFE19F40045AC1B /* ColorScheme.swift in Sources */,
 				4AB67A791EF4EB3D00EB3A65 /* HighScoresWindowController.swift in Sources */,
 				4AB67A6C1EF4E9AB00EB3A65 /* PreferencesWindowController.swift in Sources */,
 				4A8D98E51DC40AF7008D7ABE /* AppDelegate.swift in Sources */,

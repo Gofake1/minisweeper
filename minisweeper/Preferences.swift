@@ -19,13 +19,23 @@ enum Difficulty: String {
 
 struct Preferences {
 
+    static var colorScheme: ColorScheme {
+        guard let colorSchemeName = UserDefaults.standard.string(forKey: "colorScheme") else { fatalError() }
+        switch colorSchemeName {
+        case "Modern":  return ColorScheme.modern
+        case "Sierra":  return ColorScheme.sierra
+        case "Windows": return ColorScheme.windows
+        default:        fatalError("Unknown color scheme \(colorSchemeName)")
+        }
+    }
+
     static var difficulty: Difficulty? {
         guard let difficultyRawValue = UserDefaults.standard.string(forKey: "difficulty") else { return nil }
         return Difficulty(rawValue: difficultyRawValue)
     }
 
     static var options: Options {
-        let difficulty = self.difficulty ?? .medium
+        guard let difficulty = self.difficulty else { fatalError() }
         switch difficulty {
         case .easy, .medium, .hard:
             return presets[difficulty]!
@@ -41,13 +51,6 @@ struct Preferences {
         Difficulty.medium: (gridSize: (cols: 30, rows: 20), numMines: 60),
         Difficulty.hard:   (gridSize: (cols: 30, rows: 30), numMines: 100)
     ]
-
-    static func registerDefaults() {
-        UserDefaults.standard.register(defaults: [
-            "difficulty":  Difficulty.medium.rawValue,
-            "colorScheme": "Sierra"
-            ])
-    }
 
     static func setDefaults() {
         UserDefaults.standard.set(Difficulty.medium.rawValue, forKey: "difficulty")
