@@ -217,9 +217,11 @@ class GameViewController: NSViewController {
         switch game.state {
         case .notStarted:
             game.resume()
-            game.flag(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
+            let point = gameView.convert(event.locationInWindow, from: nil)
+            game.flag(x: Int(point.x/20), y: Int(point.y/20))
         case .inProgress:
-            game.flag(x: Int(event.locationInWindow.x/20), y: Int(event.locationInWindow.y/20))
+            let point = gameView.convert(event.locationInWindow, from: nil)
+            game.flag(x: Int(point.x/20), y: Int(point.y/20))
         case .paused:
             game.resume()
         case .won, .lost:
