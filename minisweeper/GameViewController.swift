@@ -69,7 +69,7 @@ class GameViewController: NSViewController {
     @objc func userDefaultsDidChange(_ sender: UserDefaults) {
         if colorScheme! != Preferences.colorScheme {
             colorScheme = Preferences.colorScheme
-            drawGame(game.allTiles)
+            drawGame(game.allTiles, redrawStroke: true)
         }
         previousGameOptions = nextGameOptions
         nextGameOptions = Preferences.options
@@ -112,7 +112,7 @@ class GameViewController: NSViewController {
             path.line(to: NSPoint(x: $1.x*20+20, y: $1.y*20+20))
             path.line(to: NSPoint(x: $1.x*20,    y: $1.y*20+20))
             $0.path = path.cgPath
-            $0.strokeColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1).cgColor
+            $0.strokeColor = colorScheme.tileStrokeColor
             $0.lineWidth = 0.5
             gameViewLayer.addSublayer($0)
             return $0
@@ -138,7 +138,7 @@ class GameViewController: NSViewController {
         return layers
     }
 
-    private func drawGame(_ dirtyTiles: [Tile]) {
+    private func drawGame(_ dirtyTiles: [Tile], redrawStroke: Bool = false) {
         for tile in dirtyTiles {
             let shapeLayer = tileShapeLayers[tile.x][tile.y]
             let textLayer = tileTextLayers[tile.x][tile.y]
@@ -163,6 +163,10 @@ class GameViewController: NSViewController {
                 textLayer.string = ""
             case .revealed:
                 textLayer.string = "💣"
+            }
+
+            if redrawStroke {
+                shapeLayer.strokeColor = colorScheme.tileStrokeColor
             }
         }
     }

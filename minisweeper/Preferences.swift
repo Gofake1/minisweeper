@@ -23,7 +23,6 @@ struct Preferences {
         guard let colorSchemeName = UserDefaults.standard.string(forKey: "colorScheme") else { fatalError() }
         switch colorSchemeName {
         case "Modern":  return ColorScheme.modern
-        case "Sierra":  return ColorScheme.sierra
         case "Windows": return ColorScheme.windows
         default:        fatalError("Unknown color scheme \(colorSchemeName)")
         }
