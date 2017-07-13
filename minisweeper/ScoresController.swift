@@ -18,7 +18,7 @@ struct Score {
 
 class ScoresController {
 
-    private unowned let persistentContainer: NSPersistentContainer
+    private weak var persistentContainer: NSPersistentContainer!
 
     init(_ persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer

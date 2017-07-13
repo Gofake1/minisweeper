@@ -49,7 +49,7 @@ class Game {
     private(set) var numFlags = 0
     private(set) var state    = State.notStarted
     private(set) var elapsedTime: TimeInterval = 0
-    private unowned var delegate: GameDelegate
+    private weak var delegate: GameDelegate!
     private var startTime: Date?
     
     /// - parameter numMines: must be less than width times height
@@ -157,6 +157,10 @@ class Game {
         }
         return tiles
     }
+
+    deinit {
+        delegate = nil
+    }
 }
 
 extension Game: CustomStringConvertible {
@@ -203,7 +207,7 @@ class Tile {
         case exploded
     }
     
-    unowned var game: Game
+    weak var game: Game!
     private var _neighbors: [Tile?]?
     var neighbors: [Tile?] {
         if _neighbors != nil {
@@ -266,6 +270,10 @@ class Tile {
             }
         }
         return dirtyTiles
+    }
+
+    deinit {
+        _neighbors?.removeAll()
     }
 }
 
