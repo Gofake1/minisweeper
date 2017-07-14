@@ -18,7 +18,7 @@ struct Score {
 
 class ScoresController {
 
-    private weak var persistentContainer: NSPersistentContainer!
+    private var persistentContainer: NSPersistentContainer!
 
     init(_ persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
@@ -50,5 +50,9 @@ class ScoresController {
         } catch let error as NSError {
             fatalError("Core Data coordinator: failed to execute request with error \(error)")
         }
+    }
+
+    deinit {
+        persistentContainer = nil
     }
 }

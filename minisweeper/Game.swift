@@ -121,6 +121,13 @@ class Game {
         stopTiming()
     }
 
+    func teardown() {
+        delegate = nil
+        for tile in allTiles {
+            tile.teardown()
+        }
+    }
+
     /// - postcondition: Mutates `elapsedTime`
     private func stopTiming() {
         defer { startTime = nil }
@@ -159,7 +166,7 @@ class Game {
     }
 
     deinit {
-        delegate = nil
+        print("game deinit'ed")
     }
 }
 
@@ -207,7 +214,7 @@ class Tile {
         case exploded
     }
     
-    weak var game: Game!
+    var game: Game!
     private var _neighbors: [Tile?]?
     var neighbors: [Tile?] {
         if _neighbors != nil {
@@ -272,7 +279,8 @@ class Tile {
         return dirtyTiles
     }
 
-    deinit {
+    func teardown() {
+        game = nil
         _neighbors?.removeAll()
     }
 }

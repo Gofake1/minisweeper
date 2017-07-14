@@ -13,7 +13,7 @@ class GameViewController: NSViewController {
     var gameViewSize: NSSize {
         return NSSize(width: game.width*20, height: game.height*20)
     }
-    weak var scoresController: ScoresController?
+    var scoresController: ScoresController?
     private var colorScheme: ColorScheme!
     private var game: Game!
     private var gameView: NSView!
@@ -81,6 +81,9 @@ class GameViewController: NSViewController {
         guard let options = nextGameOptions,
             options.numMines <= options.gridSize.cols * options.gridSize.rows
             else { fatalError() }
+        if let game = game {
+            game.teardown()
+        }
         game = Game(size: options.gridSize, numMines: options.numMines, delegate: self)
 
         // (Re)create layers if first run or game dimensions changed
@@ -105,6 +108,18 @@ class GameViewController: NSViewController {
 
     private func resetGameBoard() {
         gameViewLayer.sublayers = nil
+        if tileShapeLayers != nil {
+            for (i, _) in tileShapeLayers.enumerated().reversed() {
+                tileShapeLayers[i].removeAll()
+            }
+        }
+        tileShapeLayers = nil
+        if tileTextLayers != nil {
+            for (i, _) in tileTextLayers.enumerated().reversed() {
+                tileTextLayers[i].removeAll()
+            }
+        }
+        tileTextLayers = nil
         tileShapeLayers = makeLayers(width: game.width, height: game.height) {
             let path = NSBezierPath()
             path.move(to: NSPoint(x: $1.x*20,    y: $1.y*20))
@@ -134,6 +149,12 @@ class GameViewController: NSViewController {
                 col.append(setup(T.init(), (x, y)))
             }
             layers.append(col)
+        }
+        defer {
+            for (i, _) in layers.enumerated().reversed() {
+                layers[i].removeAll()
+            }
+            layers.removeAll()
         }
         return layers
     }
@@ -235,6 +256,10 @@ class GameViewController: NSViewController {
     
     @IBAction func startNewGame(_ sender: NSMenuItem) {
         newGame()
+    }
+
+    deinit {
+        scoresController = nil
     }
 }
 
