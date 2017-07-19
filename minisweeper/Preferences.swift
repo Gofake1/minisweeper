@@ -20,10 +20,10 @@ enum Difficulty: String {
 struct Preferences {
 
     static var colorScheme: ColorScheme {
-        guard let colorSchemeName = UserDefaults.standard.string(forKey: "colorScheme") else { fatalError() }
+        guard let colorSchemeName = UserDefaults.standard.string(forKey: "colorScheme") else { return .modern }
         switch colorSchemeName {
-        case "Modern":  return ColorScheme.modern
-        case "Windows": return ColorScheme.windows
+        case "Modern":  return modern
+        case "Windows": return windows
         default:        fatalError("Unknown color scheme \(colorSchemeName)")
         }
     }
@@ -34,7 +34,7 @@ struct Preferences {
     }
 
     static var options: Options {
-        guard let difficulty = self.difficulty else { fatalError() }
+        guard let difficulty = self.difficulty else { return presets[.medium]! }
         switch difficulty {
         case .easy, .medium, .hard:
             return presets[difficulty]!

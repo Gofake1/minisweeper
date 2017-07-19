@@ -43,6 +43,8 @@ class AppDelegate: NSObject {
 extension AppDelegate: NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        UserDefaults.standard.register(defaults: ["colorScheme", "Modern"])
+        
         highScoresWindowController = HighScoresWindowController()
         optionsWindowController = OptionsWindowController()
         preferencesWindowController = PreferencesWindowController()
