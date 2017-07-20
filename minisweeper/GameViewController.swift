@@ -15,7 +15,7 @@ class GameViewController: NSViewController {
     }
     var scoresController: ScoresController?
     private var colorScheme: ColorScheme!
-    private var game: Game!
+    fileprivate var game: Game!
     private var gameView: NSView!
     private var gameViewLayer = CALayer()
     private weak var gameViewWidthConstraint:  NSLayoutConstraint?
@@ -159,7 +159,7 @@ class GameViewController: NSViewController {
         return layers
     }
 
-    private func drawGame(_ dirtyTiles: [Tile], redrawStroke: Bool = false) {
+    fileprivate func drawGame(_ dirtyTiles: [Tile], redrawStroke: Bool = false) {
         for tile in dirtyTiles {
             let shapeLayer = tileShapeLayers[tile.x][tile.y]
             let textLayer = tileTextLayers[tile.x][tile.y]
@@ -206,7 +206,7 @@ class GameViewController: NSViewController {
         }
     }
 
-    private func endGame(_ won: Bool) {
+    fileprivate func endGame(_ won: Bool) {
         switch won {
         case true:
             view.window?.title = "Congratulations"

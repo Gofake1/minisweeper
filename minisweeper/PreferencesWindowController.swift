@@ -12,8 +12,8 @@ class PreferencesWindowController: NSWindowController {
 
     var scoresController: ScoresController?
 
-    override var windowNibName: NSNib.Name? {
-        return NSNib.Name("PreferencesWindowController")
+    override var windowNibName: String? {
+        return "PreferencesWindowController"
     }
 
     @IBAction func resetHighScores(_ sender: NSButton) {

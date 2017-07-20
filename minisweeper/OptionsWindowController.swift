@@ -15,8 +15,8 @@ class OptionsWindowController: NSWindowController {
     @IBOutlet weak var numColsField: NSTextField!
     @IBOutlet weak var numMinesField: NSTextField!
     
-    override var windowNibName: NSNib.Name? {
-        return NSNib.Name(rawValue: "OptionsWindowController")
+    override var windowNibName: String? {
+        return "OptionsWindowController"
     }
     
     override func windowDidLoad() {

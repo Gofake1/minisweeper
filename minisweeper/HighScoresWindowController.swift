@@ -12,7 +12,7 @@ class HighScoresWindowController: NSWindowController {
 
     @objc weak var managedObjectContext: NSManagedObjectContext?
 
-    override var windowNibName: NSNib.Name? {
-        return NSNib.Name(rawValue: "HighScoresWindowController")
+    override var windowNibName: String? {
+        return "HighScoresWindowController"
     }
 }
