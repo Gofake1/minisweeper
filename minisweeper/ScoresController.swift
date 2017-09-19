@@ -18,7 +18,7 @@ struct Score {
 
 class ScoresController {
 
-    private var persistentContainer: NSPersistentContainer!
+    private let persistentContainer: NSPersistentContainer
 
     init(_ persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
@@ -26,9 +26,7 @@ class ScoresController {
 
     func addScore(_ score: Score) {
         let context = persistentContainer.viewContext
-        guard let entity = NSEntityDescription.entity(forEntityName: "Score", in: context)
-            else { fatalError() }
-        let scoreMO = NSManagedObject(entity: entity, insertInto: context)
+        let scoreMO = ScoreMO(context: context)
         scoreMO.setValue(score.date,     forKey: "date")
         scoreMO.setValue(score.numCols,  forKey: "numCols")
         scoreMO.setValue(score.numMines, forKey: "numMines")
@@ -50,9 +48,5 @@ class ScoresController {
         } catch let error as NSError {
             fatalError("Core Data coordinator: failed to execute request with error \(error)")
         }
-    }
-
-    deinit {
-        persistentContainer = nil
     }
 }
