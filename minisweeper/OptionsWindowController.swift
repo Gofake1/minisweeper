@@ -44,8 +44,8 @@ class OptionsWindowController: NSWindowController {
             numMinesField.isEnabled = true
         }
 
-        (gridSize: (cols: numRowsField.integerValue,
-                    rows: numColsField.integerValue),
+        (gridSize: (cols: numColsField.integerValue,
+                    rows: numRowsField.integerValue),
          numMines: numMinesField.integerValue) = Preferences.options
     }
     
